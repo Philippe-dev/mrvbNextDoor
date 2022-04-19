@@ -5,7 +5,7 @@
 # © Mirovinben (https://www.mirovinben.fr/)
 # Licensed under the GPL version 2.0 license.
 # See LICENSE file or
-# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+# https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 #
 # -- END LICENSE BLOCK ------------------------------------
 
@@ -27,13 +27,13 @@ Table des matières :
 remerciements
 ------------------------------------------------
 
-NextDoor est issu d'OtherBlog écrit à partir d'un script pour DC1 développé par David Larlet (http://www.biologeek.com/). Il a été amélioré, optimisé, débogué grâce à tous ceux qui ont répondu à mes questions, qui m'ont fait part de leurs souhaits d'évolution ou signalé des anomalies.
+NextDoor est issu d'OtherBlog écrit à partir d'un script pour DC1 développé par David Larlet (https://www.biologeek.com/). Il a été amélioré, optimisé, débogué grâce à tous ceux qui ont répondu à mes questions, qui m'ont fait part de leurs souhaits d'évolution ou signalé des anomalies.
 
 Merci notamment à
 	- Dsls pour son aide dans les jointures de table.
 	- Moe pour m'avoir permis de rendre NextDoor indépendant du type de base de données et compatible avec myUrlHandlers.
 	- zeiram pour m'avoir aidé à simplifier l'appel à la fonction extNextDoor.
-et plus généralement aux intervenants dans le forum Dotclear (http://forum.dotclear.org/).
+et plus généralement aux intervenants dans le forum Dotclear (https://forum.dotclear.org/).
 
 ================================================
 formdate    : formatage de la date de chaque item
@@ -78,7 +78,7 @@ Les codes suivants sont utilisés pour spécifier le format de la date :
 	* %Z ou %z - fuseau horaire, ou nom ou abréviation
 	* %% - un caractère `%' littéral
 
-(Source : doc PHP en ligne - fonction 'strftime' : http://www.php.net/manual/fr/function.strftime.php)
+(Source : doc PHP en ligne - fonction 'strftime' : https://www.php.net/manual/fr/function.strftime.php)
 
 ================================================
 setlocal    : localisation du format de la date
@@ -105,9 +105,8 @@ Voici quelques termes qui ont été testés et qui sont acceptés tant par Windo
 	pour l'italien   : 'italian'
 
 Pour plus d'infos...
-	- doc PHP      : http://www.php.net/manual/fr/function.setlocale.php
-	- norme ISO639 : http://www.loc.gov/standards/iso639-2/php/code_list.php
-	- Windows      : http://msdn.microsoft.com/en-us/library/39cwe7zf%28VS.71%29.aspx
+	- doc PHP      : https://www.php.net/manual/fr/function.setlocale.php
+	- norme ISO639 : https://www.loc.gov/standards/iso639-2/php/code_list.php
 
 ============================================
 settext     : paramétrage d'extraction d'un texte

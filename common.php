@@ -372,7 +372,7 @@ function NextDoor($attr)
                 $user_id = $res_post->f('user_id');
                 $post_url = $blog_url . $post_prefix . '/' . htmlentities($res_post->f('post_url'), ENT_QUOTES, 'UTF-8');
                 $tmp = parse_url($blog_url);
-                $image_url = 'http://' . $tmp['host'];
+                $image_url = $tmp['scheme'] . '://'. $tmp['host'];
                 $blog_name = htmlentities($res_post->f('blog_name'), ENT_QUOTES, 'UTF-8');
                 setlocale(LC_ALL, $locale);
                 $post_date = mb_convert_encoding(@strftime(htmlentities($formdate, ENT_QUOTES, 'UTF-8'), strtotime($res_post->f('post_dt'))), 'UTF-8', 'ASCII');
@@ -624,7 +624,7 @@ function NextDoor($attr)
                                 case 'm': $i_new = '.' . $i_nom . '_m'; break;
                                 case 'o': $i_new = $i_nom; break;
                             }
-                            if (strpos($i_src, 'http://') === false) {
+                            if (strpos($i_src, 'http') === false) {
                                 $i_one = $image_url . $i_src;
                             } else {
                                 $i_one = $i_src;
