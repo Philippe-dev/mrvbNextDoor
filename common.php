@@ -356,7 +356,7 @@ function NextDoor($attr)
 				$image_url = 'http://'.$tmp['host'];
 				$blog_name = htmlentities($res_post->f('blog_name'), ENT_QUOTES, 'UTF-8');
 				setlocale(LC_ALL, $locale);
-				$post_date = mb_convert_encoding(strftime(htmlentities($formdate, ENT_QUOTES, 'UTF-8'), strtotime($res_post->f('post_dt'))), 'UTF-8', 'ASCII');
+				$post_date = mb_convert_encoding(@strftime(htmlentities($formdate, ENT_QUOTES, 'UTF-8'), strtotime($res_post->f('post_dt'))), 'UTF-8', 'ASCII');
 				$post_title = $res_post->f('post_title');
 				$info_title = ' title="'.htmlentities($post_title, ENT_QUOTES, 'UTF-8').'"';
 				if ($res_post->f('cat_id') <> NULL) {
