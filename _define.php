@@ -1,27 +1,29 @@
 <?php
-# -- BEGIN LICENSE BLOCK ----------------------------------
-#
-# This file is part of mrvbNextDoor, a plugin for Dotclear 2
-#
-# © Mirovinben (http://www.mirovinben.fr/)
-# Licensed under the GPL version 2.0 license.
-# See LICENSE file or
-# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-#
-# -- END LICENSE BLOCK ------------------------------------
+/**
+ * @brief mrvbNextDoor, a plugin for Dotclear 2
+ *
+ * @package Dotclear
+ * @subpackage Plugins
+ *
+ * @author Mirovinben (http://www.mirovinben.fr/)
+ *
+ * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
+ */
 
-if (!defined('DC_RC_PATH')) { return; }
+if (!defined('DC_RC_PATH')) {
+    return;
+}
 
 $this->registerModule(
-	/* Name        */	"mrvbNextDoor",
-	/* Description */	"Display posts from other blog of the same multiblog",
-	/* Author      */	"Mirovinben",
-	/* Version     */	'1.8.14',
-	/* Properties  */	array(
-							'permissions' => 'usage,contentadmin',
-							'type'        => 'plugin',
-							'dc_min'      => '2.7',
-							'support'     => 'http://www.mirovinben.fr/blog/index.php?post/id2656',
-							'details'     => 'http://plugins.dotaddict.org/dc2/details/mrvbNextDoor'
-						)
+    'mrvbNextDoor',																// Name
+    'Display posts from other blog of the same multiblog',						// Description
+    'Mirovinben',																// Authors
+    '1.8.15',																	// Version
+    [
+        'requires' => [['core', '2.7']],										// Dependencies
+        'permissions' => 'usage,contentadmin',									// Permissions
+        'type' => 'plugin',														// Type
+        'support' => 'https://www.mirovinben.fr/blog/index.php?post/id2656',	//Support & details
+        'details' => 'https://plugins.dotaddict.org/dc2/details/mrvbNextDoor'
+    ]
 );
