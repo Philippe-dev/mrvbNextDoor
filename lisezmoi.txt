@@ -1,0 +1,530 @@
+# -- BEGIN LICENSE BLOCK ----------------------------------
+#
+# This file is part of mrvbNextDoor, a plugin for Dotclear 2
+#
+# © Mirovinben (http://www.mirovinben.fr/)
+# Licensed under the GPL version 2.0 license.
+# See LICENSE file or
+# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+#
+# -- END LICENSE BLOCK ------------------------------------
+
+Table des matières :
+
+- remerciements
+- formdate   : formatage de la date de chaque item
+- setlocal   : localisation du format de la date
+- settext    : paramétrage d'extraction d'un texte
+- setimage   : paramétrage d'extraction des images
+- setnbcomm  : formatage de l'affichage du nombre de commentaires
+- formitem   : formatage des items de la liste
+- fonction NextDoor()    (dans le fichier common.php)
+- fonction intNextDoor() (dans le fichier interne.php)
+- fonction extNextDoor() (dans le fichier externe.php)
+- classes CSS
+
+================================================
+remerciements
+------------------------------------------------
+
+NextDoor est issu d'OtherBlog écrit à partir d'un script pour DC1 développé par David Larlet (http://www.biologeek.com/). Il a été amélioré, optimisé, débogué grâce à tous ceux qui ont répondu à mes questions, qui m'ont fait part de leurs souhaits d'évolution ou signalé des anomalies.
+
+Merci notamment à
+	- Dsls pour son aide dans les jointures de table.
+	- Moe pour m'avoir permis de rendre NextDoor indépendant du type de base de données et compatible avec myUrlHandlers.
+	- zeiram pour m'avoir aidé à simplifier l'appel à la fonction extNextDoor.
+et plus généralement aux intervenants dans le forum Dotclear (http://forum.dotclear.org/).
+
+================================================
+formdate    : formatage de la date de chaque item
+par défaut  : %d/%m/%Y %Hh%M
+------------------------------------------------
+
+Les codes suivants sont utilisés pour spécifier le format de la date :
+
+	* %a - nom abrégé du jour de la semaine (local)
+	* %A - nom complet du jour de la semaine (local)
+	* %b - nom abrégé du mois (local)
+	* %B - nom complet du mois (local)
+	* %c - représentation préférée pour les dates et heures, en local
+	* %C - numéro de siècle (l'année, divisée par 100 et arrondie entre 00 et 99)
+	* %d - jour du mois en numérique (intervalle 01 à 31)
+	* %D - identique à %m/%d/%y
+	* %e - numéro du jour du mois. Les chiffres sont précédés d'un espace (de ' 1' à '31')
+	* %g - identique à %G, sur 2 chiffres
+	* %G - L'année sur 4 chiffres correspondant au numéro de semaine (voir %V). Même format et valeur que %Y, excepté que si le numéro de la semaine appartient à l'année précédente ou suivante, l'année courante sera utilisé à la place
+	* %h - identique à %b
+	* %H - heure de la journée en numérique, et sur 24-heures (intervalle de 00 à 23)
+	* %I - heure de la journée en numérique, et sur 12- heures (intervalle 01 à 12)
+	* %j - jour de l'année, en numérique (intervalle 001 à 366)
+	* %m - mois en numérique (intervalle 1 à 12)
+	* %M - minute en numérique
+	* %n - caractère de nouvelle ligne
+	* %p - soit 'am' ou 'pm' en fonction de l'heure absolue, ou en fonction des valeurs enregistrées en local
+	* %r - l'heure au format a.m. et p.m
+	* %R - l'heure au format 24h
+	* %S - secondes en numérique
+	* %t - tabulation
+	* %T - l'heure actuelle (égal à %H:%M:%S)
+	* %u - le numéro de jour dans la semaine, de 1 à 7. (1 représente Lundi)
+	* %U - numéro de semaine dans l'année, en considérant le premier dimanche de l'année comme le premier jour de la première semaine
+	* %V - le numéro de semaine comme défini dans l'ISO 8601:1988, sous forme décimale, de 01 à 53. La semaine 1 est la première semaine qui a plus de 4 jours dans l'année courante, et dont Lundi est le premier jour. (Utilisez %G ou %g pour les éléments de l'année qui correspondent au numéro de la semaine pour le timestamp donné.)
+	* %W - numéro de semaine dans l'année, en considérant le premier lundi de l'année comme le premier jour de la première semaine
+	* %w - jour de la semaine, numérique, avec Dimanche = 0
+	* %x - format préféré de représentation de la date sans l'heure
+	* %X - format préféré de représentation de l'heure sans la date
+	* %y - l'année, numérique, sur deux chiffres (de 00 à 99)
+	* %Y - l'année, numérique, sur quatre chiffres
+	* %Z ou %z - fuseau horaire, ou nom ou abréviation
+	* %% - un caractère `%' littéral
+
+(Source : doc PHP en ligne - fonction 'strftime' : http://www.php.net/manual/fr/function.strftime.php)
+
+================================================
+setlocal    : localisation du format de la date
+par défaut  : rien (= réglage du serveur)
+------------------------------------------------
+
+Concerne principalement les formats de date suivants :
+	* %a - nom abrégé du jour de la semaine (local)
+	* %A - nom complet du jour de la semaine (local)
+	* %b - nom abrégé du mois (local)
+	* %B - nom complet du mois (local)
+
+La valeur à affecter à 'setlocal' correspond à celle utilisée par la fonction 'setlocale' du langage PHP. Son rendu dépendra du système d'exploitation du serveur web. Plusieurs valeurs peuvent être saisies dans 'setlocal', séparées par des virgules.
+
+Exemple :
+	setlocal = 'fra, fr_FR, toto, english'
+	Si le serveur ne reconnaît pas 'fra', alors il essaye de prendre en compte 'fr-FR', si 'fr-FR' lui est inconnu, alors... etc...
+
+Voici quelques termes qui ont été testés et qui sont acceptés tant par Windows que par Linux :
+	pour le français : 'french'
+	pour l'allemand  : 'german'
+	pour l'anglais   : 'english'
+	pour l'espagnol  : 'spanish'
+	pour l'italien   : 'italian'
+
+Pour plus d'infos...
+	- doc PHP      : http://www.php.net/manual/fr/function.setlocale.php
+	- norme ISO639 : http://www.loc.gov/standards/iso639-2/php/code_list.php
+	- Windows      : http://msdn.microsoft.com/en-us/library/39cwe7zf%28VS.71%29.aspx
+
+============================================
+settext     : paramétrage d'extraction d'un texte
+par défaut  : from=full, length=100, cut=[&hellip;]
+--------------------------------------------
+
+Les codes suivants, séparés par des virgules, sont utilisés pour paramétrer l'extraction du texte :
+
+	* from   : provenance du texte. 
+	           excerpt (chapo), content (contenu), full (tout le billet), first (chapo si présent, contenu sinon).
+	* length : longueur maxi du texte à extraire. 
+	           0 à n (si length = 0 ou si length > longueur du texte, extraction de tout le texte).
+	* cut    : texte qui sera affiché à la suite du texte si celui-ci a été tronqué.
+
+Remarques : 
+	* le texte sera débarrassé de toutes les balises HTML (comme <p>, <img>, <div>, etc...) avant d'être tronqué et affiché.
+	* compte-tenu de la présence possible de caractères spéciaux dans le texte à tronquer et compte-tenu du fait que la coupure respecte les mots, le résultat du raccourcissement peut être inférieur à la valeur de "length".
+
+============================================
+setimage    : paramétrage d'extraction des images
+par défaut  : link=none, from=full, start=1, length=1, title=1
+--------------------------------------------
+
+Les codes suivants, séparés par des virgules, sont utilisés pour paramétrer l'extraction des images :
+
+	* link   : cible du lien posé sur chaque image.
+	           entry (billet), none (aucun lien).
+	* from   : provenance des images. 
+	           excerpt (chapo), content (contenu), full (tout le billet), first (chapo si présent, contenu sinon).
+	* start  : rang de la première image à extraire. 
+	           1 à n (si start < 1 ou start > nombre total d'images dans le billet, aucune image n'est extraite).
+	* length : nombre d'images à extraire. 
+	           0 à n (si length = 0 ou si length > nombre total d'images du billet, extraction de toutes les images).
+	* size   : taille des images affichées.
+	           si size est absent : pas de modification de la taille,
+	           sinon, peut prendre une des valeurs sq (square), t (thumbnail), s (small), m (medium), o (originale)
+	           le format demandé doit être présent dans le gestionnaire de médias du blog concerné.
+	* title  : si link=entry et title<>1, alors le titre du billet dans la bulle au survol de l'image est remplacé par 'Open the post' ('ouvrir le billet')
+
+============================================
+setnbcomm   : formatage de l'affichage du nombre de commentaires
+par défaut  : none="no comments",one="one comment",more="%d comments"
+--------------------------------------------
+
+Les codes suivants, séparés par des virgules (pas d'espace entre chaque code), sont utilisés pour formater l'affichage du nombre de commentaires :
+
+	* none   : si aucun commentaire
+	* one    : si un seul commentaire
+	* more   : si plusieurs commentaires
+	
+remarques :
+	* '%d' (présent dans le texte affecté à 'more') sera remplacé par le nombre de commentaires.
+	* en utilisation interne (widget et fonction intNextDoor), le format par défaut sera traduit dans la langue du blog. En utilisation externe (fonction extNextDoor), il faudra personnaliser "setnbcomm".
+
+============================================
+formitem    : formatage des items de la liste
+par défaut  : %DATE% : %BLOG:BLOG% - %TITLE:POST%
+--------------------------------------------
+
+Variables de formatage :
+
+	* $blog_id         	 : est remplacé par l'ID du blog
+	* $blog_url          : est remplacé par l'URL du blog
+	* $blog_name         : est remplacé par le nom du blog
+
+	* $post_id         	 : est remplacé par l'ID du billet
+	* $user_id         	 : est remplacé par l'ID de l'auteur du billet
+	* $post_url          : est remplacé par l'URL du billet
+	* $post_title        : est remplacé par le titre du billet
+	* $post_trunc_title  : est remplacé par le titre tronqué du billet  
+	* $post_date         : est remplacé par la date du billet
+	* $post_lang       	 : est remplacé par la langue du billet
+	* $nb_comment        : est remplacé par le nombre de commentaires
+	* $txt_nbcomm        : est remplacé par le nombre de commentaires formaté par "setnbcomm"
+	* $nb_trackback      : est remplacé par le nombre de rétro-liens
+
+	* $cat_url           : est remplacé par l'URL de la catégorie
+	* $cat_title         : est remplacé par le nom de la catégorie
+	* $cat_id            : est remplacé par l'ID de la catégorie du billet (si pas de catégorie, remplacé par '0')
+
+Codes de formatage :
+
+	* %date%             : affiche date/heure de publication du billet sans lien ni balisage Html
+	* %DATE%             : affiche date/heure de publication du billet (formatage : voir chapitre "formdate")
+	* %DATE:BLOG%        : affiche date/heure de publication du billet en tant que lien vers le blog
+	* %DATE:POST%        : affiche date/heure de publication du billet en tant que lien vers le billet
+	
+	* %blog%             : affiche le nom du blog sans lien ni balisage Html
+	* %BLOG%             : affiche le nom du blog sans lien
+	* %BLOG:BLOG%        : affiche le nom du blog en tant que lien vers le blog
+	* %BLOG:POST%        : affiche le nom du blog en tant que lien vers le billet
+	
+	* %title%            : affiche le titre du billet sans lien ni balisage Html
+	* %TITLE%            : affiche le titre du billet sans lien
+	* %TITLE:POST%       : affiche le titre du billet en tant que lien vers le billet
+	* %TITLE:BLOG%       : affiche le titre du billet en tant que lien vers le blog
+	
+	* %nbcomm%           : affiche le nombre de commentaires du billet sans lien ni balisage Html
+	* %NBCOMM%           : affiche le nombre de commentaires du billet sans lien
+	* %NBCOMM:COMM%      : affiche le nombre de commentaires du billet en tant que lien vers les commentaires du billet
+	* %nbcomm[]%         : affiche le nombre de commentaires du billet (formaté par "setnbcomm") sans lien ni balisage Html
+	* %NBCOMM[]%         : affiche le nombre de commentaires du billet (formaté par "setnbcomm") sans lien
+	* %NBCOMM:COMM[]%    : affiche le nombre de commentaires du billet (formaté par "setnbcomm") en tant que lien vers les commentaires du billet
+
+	* %nbping%           : affiche le nombre de rétro-liens (pings) du billet sans lien ni balisage Html
+	* %NBPING%           : affiche le nombre de rétro-liens du billet sans lien
+	* %NBPING:PING%      : affiche le nombre de rétro-liens du billet en tant que lien vers les rétro-liens du billet
+	
+	* %catname[xyz]%     : affiche la chaîne "xyz" (cf remarque n°3) suivie du nom de la catégorie du billet sans lien ni balisage Html
+	* %CATNAME[xyz]%     : affiche la chaîne "xyz" (cf remarque n°3) suivie du nom de la catégorie du billet sans lien
+	* %CATNAME:CAT[xyz]% : affiche la chaîne "xyz" (cf remarque n°3) suivie du nom de la catégorie du billet en tant que lien vers la liste des billets ayant cette catégorie
+	
+	* %E%                : affiche l'extrait (si présent)
+	* %C%                : affiche le contenu du billet
+	* %EC%               : affiche l'extrait (si présent) sinon affiche le contenu du billet
+	* %TEXT%             : affiche tout ou partie du texte du billet, nettoyé de toutes les balises HTML qu'il peut contenir (formatage : voir chapitre "settext")
+	* %IMAGE%            : affiche des images trouvées dans le billet (formatage : voir chapitre "setimage")
+	
+	* %LINK:BLOG[xyz]%   : affiche la chaîne "xyz" en tant que lien vers le blog (bulle au survol du lien affichant le titre du blog)
+	* %link:BLOG[xyz]%   : affiche la chaîne "xyz" en tant que lien vers le blog (pas de bulle au survol du lien affichant le titre du blog))
+	* %LINK:POST[xyz]%   : affiche la chaîne "xyz" en tant que lien vers le billet (bulle au survol du lien affichant le titre du billet)
+	* %link:POST[xyz]%   : affiche la chaîne "xyz" en tant que lien vers le billet (pas de bulle au survol du lien affichant le titre du billet)
+	* %LINK:COMM[xyz]%   : affiche la chaîne "xyz" en tant que lien vers les commentaires du billet (bulle au survol du lien affichant le titre du billet)
+	* %link:COMM[xyz]%   : affiche la chaîne "xyz" en tant que lien vers les commentaires du billet (pas de bulle au survol du lien affichant le titre du billet)
+	* %LINK:PING[xyz]%   : affiche la chaîne "xyz" en tant que lien vers les rétro-liens du billet (bulle au survol du lien affichant le titre du billet)
+	* %link:PING[xyz]%   : affiche la chaîne "xyz" en tant que lien vers les rétro-liens du billet (pas de bulle au survol du lien affichant le titre du billet) 
+
+Remarques :
+-1- Tous ces codes sont facultatifs, y compris le titre du billet. Si un code est absent, alors le champ correspondant ne sera pas affiché. Vous pouvez insérer des espaces ou d'autres caractères entre chaque code.
+-2- Dans les codes de formatage commençant par "%LINK:" "xyz" représente ici le texte du lien. Tous les caractères de ce texte ayant des équivalents en entités HTML seront transcodés avant affichage (exemple "<" devient "&lt;", "&" devient "&amp;").
+-3- Les codes de formatage %catname[xyz]%, %CATNAME[xyz]% et %CATNAME:CAT[xyz]% n'affichent rien si le billet est sans catégorie. "xyz" est facultatif et représente ici le texte qui précéde la catégorie. Il sera affiché sans aucun transcodage.
+-4- Equivalences entre certaines variables et des codes de formatage :
+	- $blog_name    = %blog%
+	- $post_title   = %title%
+	- $post_date    = %date%
+	- $nb_comment   = %nbcomm%
+	- $txt_nbcomm   = %nbcomm[]%
+	- $nb_trackback = %nbping%
+
+============================================
+fonction NextDoor() (fichier common.php)
+--------------------------------------------
+
+Fonction interne commune utilisée par...
+- le widget (soit directement via l'interface d'administration du blog) soit via le marqueur de template <tpl:Widget>),
+- la fonction intNextDoor (mode "interne")
+- et la fonction extNextDoor (mode "externe").
+
+Elle permet de lister les derniers billets (par défaut sous forme d'une liste avec les balises Html <ul><li>...</li></ul>). Elle accepte les paramètres facultatifs suivants :
+
+	blogid      = liste des identifiants des blogs
+	            - la virgule "," sert de séparateur entre chaque élément de la liste,
+	            - si la liste est vide, alors tous les blogs sont pris en compte,
+	            - "!" devant l'identifiant d'un blog l'exclut du listage.
+	category    = liste des catégories (nom URLisé ou ID) à filtrer pour le listage des billets
+	            - la virgule "," sert de séparateur entre chaque élément de la liste,
+	            - si la liste est vide, alors toutes les catégories sont prises en compte,
+	            - NULL sera utilisé pour lister les billets sans catégorie,
+	            - si ID d'une catégorie au lieu du nom URLisé, mettre un '#' devant le n°ID (ex : #123).
+	            - "!" devant le nom ou l'ID d'une catégorie l'exclut du listage.
+	metatag     = mot-clé (tag / meta) permettant de n'afficher que les billets qui ont ce mot-clé (si absent, alors pas de filtre)
+	selected    = "0" ou "1". Si "1", alors seuls les billets ayant le status "sélectionné" sont listés
+	password    = "only", "also", "no" (ou vide).
+	            - si "only" : seuls les billets avec mot de passe sont listés,
+	            - si "also" : les billets avec mot de passe sont inclus dans la liste.
+	            - sinon : les billets avec mot de passe ne sont pas listés
+	listurl     = filtre sur une liste de billets
+	            - une ou plusieurs url séparées par des virgules
+	            - si vide alors pas de filtre,
+	maxitems    = nombre maximum de billets à lister
+	            - si vide alors pas de limite,
+	            - si de la forme x   -y alors x billets seront affichés après les y plus récents.
+	orderby     = ordre de listage des billets : ASC (plus ancien en premier) ou DESC (plus récent en premier)
+	            - si absent ou différent de ASC/DESC alors orderby = DESC.
+	typepost    = précise le(s) type(s) de billet(s) à lister et le type d'URL pour appeler ce(s) type(s) de billet
+	            - format 'typ/url' avec un slash comme séparateur
+	            - liste possible de couples 'typ/url' séparés par une virgule
+	            - si url absent alors url = typ
+	            - si vide, est équivalent à 'post/post'
+	typlist     = type de format de la liste
+	            - si "ul"        : liste à puce (<ul><li>..</li>)
+	            - si "div"       : bloc (<div>..</div>)
+	            - si ""          : aucun format ne sera appliqué
+	            - ne sera pris en compte que si nolist(*) = 0 (valeur par défaut)
+	formdate    = formatage de la date (syntaxe : voir plus haut)
+	setlocal    = localisation du format de la date (syntaxe : voir plus haut).
+	settext     = paramétrage d'extraction d'un texte (syntaxe : voir plus haut)
+	setimage    = paramétrage d'extraction des images (syntaxe : voir plus haut)
+	setnbcomm   = formatage de l'affichage du nombre de commentaires (syntaxe : voir plus haut)
+	formitem    = formatage de chaque item (syntaxe : voir plus haut)
+	titlemax    = longueur maximum de chaque titre de billet ("0": pas de troncature)
+	titlecut    = texte indiquant si le titre du billet a été tronqué
+	noexcerpt   = affiche un texte de remplacement si l'extrait est vide
+	readmore    = affiche une invite pour lire la suite si seul l'extrait est prévu et s'il est non vide.
+
+	mode(*)     = paramètre à usage interne indiquant le mode de fonctionnement du plugin
+	nolist(*)   = "0" ou "1". Si "1", alors pas de formatage de la liste
+	modifurl(*) = "0" ou "1". Si "1", alors prise en compte du plugin myUrlHandlers
+
+(*)Remarques :
+	-1- un paramètre supplémentaire est utilisé uniquement en interne pour indiquer le mode de fonctionnement du plugin. Il prendra l'une des 2 valeurs suivantes : "interne" ou "externe" selon le contexte. Vous n'avez pas à le modifier.
+	-2- le paramètre 'nolist' n'est pas disponible en mode widget (y compris avec <tpl:Widget>) et ne pourra être utilisé qu'avec les fonctions intNextDoor (mode "interne") ou extNextDoor (mode "externe").
+	-3- le paramètre 'modifurl' n'est pas disponible en mode widget (y compris avec <tpl:Widget>) ni avec la fonction intNextDoor (mode "interne") car il y a détection automatique de la présence ou pas du plugin myUrlHandlers. Il n'est utilisable qu'avec la fonction extNextDoor (mode "externe"). 
+
+valeurs par défaut :
+	'blogid'    => ' ',
+	'category'  => '',
+	'metatag'   => '',
+	'selected'  => '0',
+	'password'  => '',
+	'listurl'   => '',
+	'maxitems'  => '8',
+	'orderby'   => 'DESC',
+	'typepost'  => '',
+	'typlist'   => 'ul',
+	'formdate'  => '%d/%m/%Y %Hh%M',
+	'setlocal'  => '',
+	'settext'   => 'from=full, length=100, cut=[&hellip;]',
+	'setimage'  => 'link=none, from=full, start=1, length=1',
+	'setnbcomm' => 'none="no comments",one="one comment",more="%d comments"'
+	'formitem'  => '%DATE% : %BLOG:BLOG% - %TITLE:POST%',
+	'titlemax'  => '0',
+	'titlecut'  => '[&hellip;]',
+	'noexcerpt' => '',
+	'readmore'  => '',
+	
+	'mode'      => 'interne',
+	'nolist'    => '0',
+	'modifurl'  => '0',
+
+============================================
+utilisation avec le marqueur <tpl:Widget>
+--------------------------------------------
+
+Paramètres non utilisables (voir la fonction NextDoor): 
+	mode, nolist et modifurl.
+	
+Paramètres supplémentaires propres à cet usage :
+	title (text)     : titre du widget (facultatif)
+	CSSclass (text)  : classe CSS du widget (facultatif)
+	offline (0|1)    : mettre hors ligne (par défaut : 0 = en ligne)
+	homeonly (0|1|2) : si 0 = toutes les pages, 
+					   si 1 = page d'accueil uniquement,
+					   si 2 = sauf page d'accueil
+					   (par défaut : 0 = toutes les pages)
+	intro (text)     : texte d'introduction (facultatif)
+	conclu (text)    : texte de conclusion (facultatif)
+	
+Exemple de syntaxe à utiliser dans un fichier template :
+	<div class="NextDoor">
+		<tpl:Widget id="mrvbNextDoor">
+			<setting name="blogid">default</setting>
+			<setting name="formitem">%DATE% : %TITLE%</setting>
+			<setting name="formdate">le %d/%m/%Y à %Hh%M</setting>
+		</tpl:Widget>
+	</div>
+
+============================================
+fonction intNextDoor() (fichier interne.php)
+--------------------------------------------
+
+Cette fonction utilise la fonction interne NextDoor du fichier common.php. Les paramètres facultatifs possibles et les valeurs par défaut sont les mêmes sauf pour 'mode' qui vaut obligatoirement 'interne' et 'modifurl' qui est automatiquement configuré.
+
+Paramètres non utilisables : 
+	mode et modifurl.
+	
+Paramètre supplémentaire propre à cet usage :
+	nolist (0|1)    : mettre hors ligne (par défaut : 0 = en ligne)
+	
+Exemple de syntaxe à utiliser dans une page connexe obtenue avec le plugin related :
+Attention ! Le chemin est à adapter à votre environnement...
+	<div class="NextDoor">
+		<?php
+			$attr = array(
+				'blogid'   => 'default',
+				'maxitems' => '100',
+				'formdate' => '%d/%m/%Y',
+				'formitem' => '%DATE% : %TITLE%',
+			);
+			include_once('(accès relatif vers dotclear2)/(répertoire des plugins)/NextDoor/interne.php');
+			intNextDoor($attr);
+		?>
+	</div>
+
+============================================
+fonction extNextDoor() (fichier externe.php)
+--------------------------------------------
+
+Cette fonction utilise la fonction interne NextDoor du fichier common.php. Les paramètres facultatifs possibles et les valeurs par défaut sont les mêmes sauf pour 'mode' qui vaut obligatoirement 'externe'. Est ajouté 'modifurl', un paramètre spécifique à cette fonction. Il indique s'il faut prendre en compte (='1') ou pas (='0') les modifications d'URL via le plugin myUrlHandlers (valeur par défaut : 'modifurl'  => '0').
+
+Pour accéder aux variables de Dotclear et aux fonctions de dblayer, il est nécessaire d'indiquer le chemin d'accès à Dotclear via la constante DC_ROOT. Si DC_ROOT n'est pas définie, alors le message contenu dans la variable $errNUL s'affichera entre des balises <p> et </p> à la place de la liste. Si DC_ROOT ne désigne pas le bon chemin, alors le message contenu dans la variable $errDC2 s'affichera entre des balises <p> et </p> à la place de la liste. En cas de problème lors de la connexion à la base de données, le message contenu dans la variable $errSQL s'affiche entre des balises <p> et </p> à la place de la liste.
+
+Paramètre non utilisable : 
+	mode.
+	
+
+Paramètre supplémentaire propres à cet usage :
+    nolist (0|1)    : suppression des balises <ul> </ul> et <li> </li> si = 0 (par défaut : 1 = liste à puces)
+	modifurl (0|1)  : prendre en compte modifications d'URL via le plugin myUrlHandlers( par défaut : 0 = non)
+
+Exemple de syntaxe à utiliser dans une page externe du même domaine avec Dotclear présent dans le sous-répertoire "/dc2" et le plugin NextDoor dans le sous-répertoire "/dc2/plugins" :
+	<?php 
+		if (!defined('DC_ROOT')) {
+			define('DC_ROOT', dirname(__FILE__).'/dc2');
+		}
+		$attr = array(    
+			'blogid'   => 'default',
+			'maxitems' => '40',
+			'formdate' => '%d/%m/%Y',
+			'formitem' => '%TITLE%',
+		);
+		include_once(DC_ROOT.'/plugins/NextDoor/externe.php'); 
+		extNextDoor($attr);
+	?>
+!!!	Paramétrage de listurl : faire attention à la séquence de "" et de ''.
+	Deux syntaxes possibles : 'listurl' => '"aaa","bbb","ccc"' ou 'listurl' => "'aaa','bbb','ccc'".
+
+!!! Les chaînes de caractères prises en compte par %nbcomm[]%, %NBCOMM[]% et %NBCOMM:COMM[]% via le paramètre "setnbcomm" sont en anglais par défaut et ne sont pas traduites automatiquement lorsqu'on utilise la fonction extNextDoor(). Si vous souhaitez un affichage dans une autre langue, il faut nécessairement personnaliser le contenu de "setnbcomm".
+
+============================================
+CSS
+--------------------------------------------
+
+Si vous utilisez les fonctions intNextDoor (mode "interne") ou extNextDoor (mode "externe"), vous pouvez donner la valeur "1" à nolist (par défaut "0") pour ne pas avoir de formatage de la liste. Si vous utilisez le widget ou <tpl:Widget>, alors nolist vaut obligatoirement "0".
+
+Conventions utilisées dans la suite de ce chapitre : 
+	(###) = une ou plusieurs classes personnelles facultatives ajoutées via le paramétrage du widget.
+	($$$) = contenu de chaque item.
+	(&&&) = blog-? (où "?" est remplacé par l'ID du blog auquel appartient l'item)
+	      + cat-? (où "?" est remplacé par l'ID de la catégorie) si l'item a une catégorie 
+		  + nocat si l'item n'a pas de catégorie
+	      + nxdo-pwd si et seulement si l'item a un mot de passe.
+
+-1- utilisation du widget ou de <tpl:Widget> avec typlist = "ul" :
+	<div class="mrvbNextDoor (###)">
+		<h2>Titre du widget</h2>
+		<div class= "nxdo-first">Texte d'introduction</div>
+			<ul class="nxdo-list">
+				<li class="nxdo-item (&&&)">
+					($$$)
+				</li>
+			</ul>
+		<div class="nxdo-last">Texte de conclusion</div>
+	</div>
+
+-2- utilisation du widget ou de <tpl:Widget> avec typlist = "div" :
+	<div class="mrvbNextDoor (###)">
+		<h2>Titre du widget</h2>
+		<div class="nxdo-first">Texte d'introduction</div>
+			<div class="nxdo-item (&&&)">
+				($$$)
+			</div>
+		<div class="nxdo-last">Texte de conclusion</div>
+	</div>
+
+-3- utilisation du widget ou de <tpl:Widget> avec typlist = "" :
+	<div class="mrvbNextDoor (###)">
+		<h2>Titre du widget</h2>
+		<div class="nxdo-first">Texte d'introduction</div>
+		($$$)
+		<div class="nxdo-last">Texte de conclusion</div>
+	</div>
+
+-4- si nolist=0 (par défaut) avec intNextDoor ou extNextDoor :
+	<ul class="nxdo-list">
+		<li class="nxdo-item (&&&)">
+			($$$)
+		</li>
+	</ul>
+
+-5- si nolist=1 avec intNextDoor ou extNextDoor :
+	Pas de liste = ne reste donc qu'une série de ($$$)($$$)...
+
+Le contenu de ($$$) dépendra des codes de formatage suivants :
+	%date%             : date/heure (sans balisage Html)
+	%DATE%             : <span class="nxdo-date">date/heure</span>
+	%DATE:BLOG%        : <a class="nxdo-datelink" href="[URL du blog]">date/heure</a>
+	%DATE:POST%        : <a class="nxdo-datelink" href="[URL du billet]">date/heure</a>
+
+	%blog%             : nom du blog (sans balisage Html)
+	%BLOG%             : <span class="nxdo-blog">nom du blog</span>
+	%BLOG:BLOG%        : <a class="nxdo-bloglink" href="[URL du blog]">nom du blog</a>
+	%BLOG:POST%        : <a class="nxdo-bloglink" href="[URL du billet]">nom du blog</a>
+
+	%title%            : Titre du billet (sans balisage Html)
+	%TITLE%            : <span class="nxdo-post">Titre du billet</span>
+	%TITLE:POST%       : <a class="nxdo-postlink" href="[URL du billet]">Titre du billet</a>
+	%TITLE:BLOG%       : <a class="nxdo-postlink" href="[URL du blog]">Titre du billet</a>
+
+	%nbcomm%           : nombre de commentaires du billet (sans balisage Html)
+	%NBCOMM%           : <span class="nxdo-comments">nombre de commentaires du billet</span>
+	%NBCOMM:COMM%      : <a class="nxdo-comments" href="[URL du billet#comments]">Nombre de commentaires du billet</a>
+
+	%nbcomm[]%         : Nombre de commentaires du billet (formaté par "setnbcomm") sans balisage Html
+	%NBCOMM[]%         : <span class="nxdo-comments">nombre de commentaires du billet (formaté par "setnbcomm")</span>
+	%NBCOMM:COMM[]%    : <a class="nxdo-comments" href="[URL du billet#comments]">nombre de commentaires du billet (formaté par "setnbcomm")</a>
+	
+	%nbping%           : nombre de rétro-liens du billet (sans balisage Html)
+	%NBPING%           : <span class="nxdo-pings">Nombre de rétro-liens du billet</span>
+	%NBPING:PING%      : <a class="nxdo-pings" href="[URL du billet#pings]">Nombre de rétro-liens du billet</a>
+
+	%catname[xyz]%     : affiche la chaîne "xyz" (label) suivie du nom de la catégorie du billet (sans balisage Html)
+	%CATNAME[xyz]%     : xyz<span class="nxdo-cat">nom de la catégorie du billet</span>
+	%CATNAME:CAT[xyz]% : xyz<a href="[URL de la catégorie]" class="nxdo-cat">nom de la catégorie du billet</a>
+	
+	%E%                : si pas d'invite pour lire la suite <div class="nxdo-excerpt">extrait</div> sinon <div class="nxdo-excerpt">extrait<p class=\"nxdo-readmore\"><a href="[URL du billet]">invite pour lire la suite</a></p></div>
+	%C%                : <div class="nxdo-content">contenu</div>
+	%EC%               : si extrait <div class="nxdo-excerpt">extrait</div>, sinon <div class="nxdo-content">contenu</div>
+	%TEXT%             : texte brut, aucune affectation automatique d'une classe spécifique. 
+	%IMAGE%            : <img class="nxdo-img"(...) /> ou, si lien vers billet, <a class="nxdo-postlink" href="[URL du billet]"(...)><img class="nxdo-img"(...) /></a>
+
+	%LINK:BLOG[xyz]%   : <a class="nxdo-bloglink" href="[URL du blog]" title="[titre du blog]">xyz</a>
+	%link:BLOG[xyz]%   : <a class="nxdo-bloglink" href="[URL du blog]">xyz</a>
+	%LINK:POST[xyz]%   : <a class="nxdo-postlink" href="[URL du billet]" title="[titre du billet]">xyz</a>
+	%link:POST[xyz]%   : <a class="nxdo-postlink" href="[URL du billet]">xyz</a>
+	%LINK:COMM[xyz]%   : <a class="nxdo-comments" href="[URL du billet#comments]" title="[titre du billet]">xyz</a>
+	%link:COMM[xyz]%   : <a class="nxdo-comments" href="[URL du billet#comments]">xyz</a>
+	%LINK:PING[xyz]%   : <a class="nxdo-pings" href="[URL du billet#pings]" title="[titre du billet]">xyz</a>
+	%link:PING[xyz]%   : <a class="nxdo-pings" href="[URL du billet#pings]">xyz</a>
+

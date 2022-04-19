@@ -1,0 +1,123 @@
+# -------------------------------------
+# French translation of NextDoor
+# © Mirovinben (http://www.mirovinben.fr/)
+# -------------------------------------
+msgid ""
+msgstr ""
+
+msgid "Mrvb: other blog"
+msgstr "Mrvb : autre blog"
+
+msgid "posts from other blog of the same multiblog"
+msgstr "billets d'un autre blog du même multi-blogs"
+
+msgid "Title:"
+msgstr "Titre&nbsp;:"
+
+msgid "In other blogs"
+msgstr "Dans les autres blogs"
+
+msgid "CSS class widget:"
+msgstr "Classe CSS du widget&nbsp;:"
+
+msgid "Display on:"
+msgstr "Afficher&nbsp;:"
+
+msgid "Home page only"
+msgstr "En page d'accueil seulement"
+
+msgid "All pages"
+msgstr "Sur toutes les pages"
+
+msgid "Except on home page"
+msgstr "Sauf en page d'accueil"
+
+msgid "To put off line"
+msgstr "Mettre hors ligne"
+
+msgid "List of blogs (ID, ID...):<br />(empty means all, a [!] before to exclude)"
+msgstr "Liste des blogs (ID, ID...)&nbsp;:<br />(vide = tous, un [!] devant pour exclure)"
+
+msgid "List of category (URL, #ID...):<br />(empty means all, NULL means posts without category, a [#] before if ID, a [!] before to exclude)"
+msgstr "Liste des catégories (URL, #ID...)&nbsp;:<br />(vide = toutes, NULL = billets sans catégorie, un [#] devant si ID, un [!] devant pour exclure)"
+
+msgid "Filter on a tag (empty means all):"
+msgstr "Filtre sur un mot-clé (vide = tous)&nbsp;:"
+
+msgid "Selected posts only"
+msgstr "Billets sélectionnés uniquement"
+
+msgid "Filter posts with/without password"
+msgstr "Filtrer les billets avec/sans mot de passe"
+
+msgid "only posts without password"
+msgstr "uniquement les billets sans mot de passe"
+
+msgid "also include posts with password"
+msgstr "inclure aussi les billets avec mot de passe"
+
+msgid "only posts with password"
+msgstr "uniquement les billets avec mot de passe"
+
+msgid "Filter on a list of url:"
+msgstr "Filtre sur une liste d'url&nbsp;:"
+
+msgid "One or more types of entries (format typ/url) to be considered (empty means post/post):"
+msgstr "Un ou plusieurs types d'entrées (format typ/url) à prendre en compte (vide = post/post)&nbsp;:"
+
+msgid "Maximum number of posts:<br />(empty means all, if x-y then x posts after the first y)"
+msgstr "Nombre maximum de billets&nbsp;:<br />(vide = tous, si x-y alors x billets après les y premiers)"
+
+msgid "List by order..."
+msgstr "Lister par ordre..."
+
+msgid "Format of the date:"
+msgstr "Format de la date&nbsp;:"
+
+msgid "Localization of the date format:"
+msgstr "Localisation du format de la date&nbsp;:"
+
+msgid "Settings to extract some text (%TEXT%):"
+msgstr "Paramètres pour extraire du texte (%TEXT%)&nbsp;:"
+
+msgid "Settings to extract images (%IMAGE%):"
+msgstr "Paramètres pour extraire des images (%IMAGE%)&nbsp;:"
+
+msgid "Settings to display the number of comments (%NBCOMM[]%):"
+msgstr "Paramètres pour afficher le nombre de commentaires (%NBCOMM[]%)&nbsp;:"
+
+msgid "Format of items:"
+msgstr "Format des items&nbsp;:"
+
+msgid "Maximum length of post title:"
+msgstr "Longueur maxi des titres des billets&nbsp;:"
+
+msgid "Text if post title is truncated:"
+msgstr "Texte si le titre du billet est tronqué&nbsp;:"
+
+msgid "Text at the end of the extract to read more:"
+msgstr "Texte en fin d'extrait pour lire la suite&nbsp;:"
+
+msgid "Text if the excerpt is empty:"
+msgstr "Texte si l'extrait est vide&nbsp;:"
+
+msgid "Format of the list"
+msgstr "Format de la liste"
+
+msgid "bulleted list"
+msgstr "liste à puces"
+
+msgid "div block"
+msgstr "bloc div"
+
+msgid "none"
+msgstr "sans"
+
+msgid "Text of introduction:" 
+msgstr "Texte d'introduction&nbsp;:"
+
+msgid "Text of conclusion:"
+msgstr "Texte de conclusion&nbsp;:"
+
+msgid "Open the post"
+msgstr "Ouvrir le billet"
