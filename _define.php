@@ -18,9 +18,9 @@ $this->registerModule(
     'mrvbNextDoor',																// Name
     'Display posts from other blog of the same multiblog',						// Description
     'Mirovinben',																// Authors
-    '1.8.15',																	// Version
+    '1.9',																	// Version
     [
-        'requires' => [['core', '2.7']],										// Dependencies
+        'requires' => [['core', '2.24']],										// Dependencies
         'permissions' => 'usage,contentadmin',									// Permissions
         'type' => 'plugin',														// Type
         'support' => 'https://www.mirovinben.fr/blog/index.php?post/id2656',	//Support & details

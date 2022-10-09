@@ -21,13 +21,11 @@ class mrvbNextDoorPublic
 {
     public static function mrvbNextDoor($w)
     {
-        global $core;
-
         if ($w->offline) {
             return;
         }
-        if (($w->homeonly == 1 && $core->url->type != 'default') ||
-            ($w->homeonly == 2 && $core->url->type == 'default')) {
+        if (($w->homeonly == 1 && dcCore::app()->url->type != 'default') ||
+            ($w->homeonly == 2 && dcCore::app()->url->type == 'default')) {
             return;
         }
 

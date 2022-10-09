@@ -50,15 +50,14 @@ include_once $DC_SGBD . '/_common.php';
 include_once DC_ROOT . '/inc/config.php';
 
 try {
-    $con = dbLayer::init(DC_DBDRIVER, DC_DBHOST, DC_DBNAME, DC_DBUSER, DC_DBPASSWORD);
+    dcCore::app()->con = dbLayer::init(DC_DBDRIVER, DC_DBHOST, DC_DBNAME, DC_DBUSER, DC_DBPASSWORD);
 } catch (Exception $e) {
     echo '<p>' . $errSQL . '</p>';
 }
 
 function extNextDoor($attr)
 {
-    global $con;
-    if (!$con) {
+    if (!dcCore::app()->con) {
         return;
     }
     include_once 'common.php';
