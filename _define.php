@@ -15,15 +15,15 @@ if (!defined('DC_RC_PATH')) {
 }
 
 $this->registerModule(
-    'mrvbNextDoor',																// Name
-    'Display posts from other blog of the same multiblog',						// Description
-    'Mirovinben',																// Authors
-    '1.9',																	// Version
+    'mrvbNextDoor',
+    'Display posts from other blog of the same multiblog',
+    'Mirovinben',
+    '1.9',
     [
-        'requires' => [['core', '2.24']],										// Dependencies
-        'permissions' => 'usage,contentadmin',									// Permissions
-        'type' => 'plugin',														// Type
-        'support' => 'https://www.mirovinben.fr/blog/index.php?post/id2656',	//Support & details
+        'requires' => [['core', '2.24']],
+        'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
+        'type' => 'plugin',
+        'support' => 'https://www.mirovinben.fr/blog/index.php?post/id2656',
         'details' => 'https://plugins.dotaddict.org/dc2/details/mrvbNextDoor'
     ]
 );
