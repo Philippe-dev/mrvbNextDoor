@@ -15,7 +15,6 @@
  * Pour toute information concernant le paramétrage et l'usage de la fonction NextDoor(),
  * veuillez consulter le fichier lisezmoi.txt.
  */
-
 $errNUL = 'La constante DC_ROOT n\'est pas définie...';
 $errDC2 = 'La constante DC_ROOT n\'indique pas le bon chemin d\'accès à Dotclear...';
 $errCBK = 'Impossible de trouver le répertoire de Clearbricks...';
@@ -23,6 +22,7 @@ $errSQL = 'Base de données inaccessible...';
 
 if (!defined('DC_ROOT')) {
     echo '<p>' . $errNUL . '</p>';
+
     return 0;
 }
 
@@ -34,11 +34,13 @@ if (is_dir(DC_ROOT . '/inc/libs/clearbricks')) {
 
 if (!@file_exists($DC_SGBD . '/_common.php')) {
     echo '<p>' . $errCBK . '</p>';
+
     return 0;
 }
 
 if (!@file_exists(DC_ROOT . '/inc/config.php')) {
     echo '<p>' . $errDC2 . '</p>';
+
     return 0;
 }
 

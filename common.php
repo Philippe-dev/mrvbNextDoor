@@ -15,7 +15,6 @@
  * Pour toute information concernant le paramétrage et l'usage de la fonction NextDoor(),
  * veuillez consulter le fichier lisezmoi.txt.
  */
-
 require_once dirname(__FILE__) . '/_init.php';
 
 function nxdo_trunc_title($str, $max, $etc, $lnk)
@@ -26,6 +25,7 @@ function nxdo_trunc_title($str, $max, $etc, $lnk)
     } else {
         $res = htmlentities($str, ENT_QUOTES, 'UTF-8') . $a;
     }
+
     return $res;
 }
 
@@ -34,9 +34,9 @@ function nxdo_trunc_text($txt, $max, $etc)
     $txt = strip_tags(str_replace(['<br />', '&nbsp;'], ' ', $txt));
     if ($max > 0) {
         return (strlen($txt) > $max ? substr(substr($txt, 0, $max), 0, strrpos(substr($txt, 0, $max), ' ')) . ' ' . $etc : $txt);
-    } else {
-        return $txt;
     }
+
+    return $txt;
 }
 
 function nxdo_format_link($txt, $deb, $end, $lnk, $tit, $css)
@@ -47,6 +47,7 @@ function nxdo_format_link($txt, $deb, $end, $lnk, $tit, $css)
         $e = strpos($txt, $end, $d);
         if ($e !== false) {
             $res = substr($txt, $d + $s, $e - ($d + $s));
+
             return str_replace($deb . $res . $end, '<a href="' . $lnk . '" ' . $css . ' ' . $tit . '>' . htmlentities($res, ENT_QUOTES, 'UTF-8') . '</a>', $txt);
         }
     }
@@ -64,16 +65,15 @@ function nxdo_cat_name($txt, $deb, $end, $lnk, $tit, $css)
                 $t = htmlentities($tit, ENT_QUOTES, 'UTF-8');
                 if (strlen($lnk) > 0) {
                     return str_replace($deb . $res . $end, $res . '<a href="' . $lnk . '" ' . $css . '>' . $t . '</a>', $txt);
-                } else {
-                    if (strlen($css) > 0) {
-                        return str_replace($deb . $res . $end, $res . '<span ' . $css . '>' . $t . '</span>', $txt);
-                    } else {
-                        return str_replace($deb . $res . $end, $res . $t, $txt);
-                    }
                 }
-            } else {
-                return str_replace($deb . $res . $end, '', $txt);
+                if (strlen($css) > 0) {
+                    return str_replace($deb . $res . $end, $res . '<span ' . $css . '>' . $t . '</span>', $txt);
+                }
+
+                return str_replace($deb . $res . $end, $res . $t, $txt);
             }
+
+            return str_replace($deb . $res . $end, '', $txt);
         }
     }
 }
@@ -81,17 +81,17 @@ function nxdo_cat_name($txt, $deb, $end, $lnk, $tit, $css)
 function NextDoor($attr)
 {
     //--- initialisation/formatage des paramètres fournis à la fonction
-    $mode = isset($attr['mode']) ? $attr['mode'] : 'interne';
-    $blogid = isset($attr['blogid']) ? $attr['blogid'] : ' ';
-    $category = isset($attr['category']) ? $attr['category'] : '';
-    $metatag = isset($attr['metatag']) ? $attr['metatag'] : '';
-    $maxitems = isset($attr['maxitems']) ? $attr['maxitems'] : '8';
-    $selected = isset($attr['selected']) ? $attr['selected'] : 0;
-    $password = isset($attr['password']) ? $attr['password'] : '';
-    $formdate = isset($attr['formdate']) ? $attr['formdate'] : NXDO_FORMDATE;
-    $setlocal = isset($attr['setlocal']) ? $attr['setlocal'] : '';
+    $mode     = $attr['mode']     ?? 'interne';
+    $blogid   = $attr['blogid']   ?? ' ';
+    $category = $attr['category'] ?? '';
+    $metatag  = $attr['metatag']  ?? '';
+    $maxitems = $attr['maxitems'] ?? '8';
+    $selected = $attr['selected'] ?? 0;
+    $password = $attr['password'] ?? '';
+    $formdate = $attr['formdate'] ?? NXDO_FORMDATE;
+    $setlocal = $attr['setlocal'] ?? '';
     //--- formatage pour %TEXT%
-    $settext = str_replace(' ', '', isset($attr['settext']) ? $attr['settext'] : NXDO_SETTEXT);
+    $settext = str_replace(' ', '', $attr['settext'] ?? NXDO_SETTEXT);
     $txt_src = 'full';
     $txt_siz = '100';
     $txt_cut = '[&hellip;]';
@@ -101,77 +101,89 @@ function NextDoor($attr)
             $txt_val = explode('=', $txt_prm[$i]);
             switch ($txt_val[0]) {
                 case 'from': $txt_src = $txt_val[1];
-                break;
+
+                    break;
                 case 'length': $txt_siz = $txt_val[1];
-                break;
+
+                    break;
                 case 'cut': $txt_cut = $txt_val[1];
-                break;
+
+                    break;
             }
         }
     }
     //--- formatage pour %IMAGE%
-    $setimage = str_replace(' ', '', isset($attr['setimage']) ? $attr['setimage'] : NXDO_SETIMAGE);
-    $img_lnk = 'none';
-    $img_src = 'full';
-    $img_deb = '1';
-    $img_nbr = '1';
-    $img_siz = '';
-    $img_tit = '1';
+    $setimage = str_replace(' ', '', $attr['setimage'] ?? NXDO_SETIMAGE);
+    $img_lnk  = 'none';
+    $img_src  = 'full';
+    $img_deb  = '1';
+    $img_nbr  = '1';
+    $img_siz  = '';
+    $img_tit  = '1';
     if (!empty($setimage)) {
         $img_prm = explode(',', $setimage);
         for ($i = 0 ; $i < count($img_prm) ; $i++) {
             $img_val = explode('=', $img_prm[$i]);
             switch ($img_val[0]) {
                 case 'link': $img_lnk = $img_val[1];
-                break;
+
+                    break;
                 case 'from': $img_src = $img_val[1];
-                break;
+
+                    break;
                 case 'start': $img_deb = $img_val[1];
-                break;
+
+                    break;
                 case 'length': $img_nbr = $img_val[1];
-                break;
+
+                    break;
                 case 'size': $img_siz = $img_val[1];
-                break;
+
+                    break;
                 case 'title': $img_tit = $img_val[1];
-                break;
+
+                    break;
             }
         }
     }
     //--- formatage pour le nombre de commentaires
-    $setnbcomm = isset($attr['setnbcomm']) ? $attr['setnbcomm'] : NXDO_SETNBCOMM;
-    $com_non = 'no comments';
-    $com_one = 'one comment';
-    $com_mor = '%d comments';
+    $setnbcomm = $attr['setnbcomm'] ?? NXDO_SETNBCOMM;
+    $com_non   = 'no comments';
+    $com_one   = 'one comment';
+    $com_mor   = '%d comments';
     if (!empty($setnbcomm)) {
         $com_prm = explode(',', $setnbcomm);
         for ($i = 0 ; $i < count($com_prm) ; $i++) {
             $com_val = explode('=', $com_prm[$i]);
             switch ($com_val[0]) {
                 case 'none': $com_non = str_replace('"', '', $com_val[1]);
-                break;
+
+                    break;
                 case 'one': $com_one = str_replace('"', '', $com_val[1]);
-                break;
+
+                    break;
                 case 'more': $com_mor = str_replace('"', '', $com_val[1]);
-                break;
+
+                    break;
             }
         }
     }
     $nbcomm = [__($com_non), __($com_one), __($com_mor)];
     //--- initialisation de $formitem
-    $formitem = isset($attr['formitem']) ? $attr['formitem'] : NXDO_FORMITEM;
+    $formitem = $attr['formitem'] ?? NXDO_FORMITEM;
     if (empty($formitem)) {
         $formitem = '&nbsp;';
     }
     //---
-    $titlemax = isset($attr['titlemax']) ? $attr['titlemax'] : '0';
-    $titlecut = isset($attr['titlecut']) ? $attr['titlecut'] : NXDO_TITLECUT;
-    $noexcerpt = isset($attr['noexcerpt']) ? $attr['noexcerpt'] : '';
-    $readmore = isset($attr['readmore']) ? $attr['readmore'] : '';
-    $nolist = isset($attr['nolist']) ? $attr['nolist'] : 0;
-    $typlist = isset($attr['typlist']) ? $attr['typlist'] : 'ul';
+    $titlemax  = $attr['titlemax']  ?? '0';
+    $titlecut  = $attr['titlecut']  ?? NXDO_TITLECUT;
+    $noexcerpt = $attr['noexcerpt'] ?? '';
+    $readmore  = $attr['readmore']  ?? '';
+    $nolist    = $attr['nolist']    ?? 0;
+    $typlist   = $attr['typlist']   ?? 'ul';
     $listepuce = ($typlist === 'ul');
     //--- $typepost
-    $typepost = str_replace(' ', '', isset($attr['typepost']) ? $attr['typepost'] : '');
+    $typepost = str_replace(' ', '', $attr['typepost'] ?? '');
     if (empty($typepost)) {
         $typepost = 'post/post';
     }
@@ -186,20 +198,20 @@ function NextDoor($attr)
             $p_url[$i] = $tmp2[1];
         }
     }
-    $orderby = strtoupper(str_replace(' ', '', isset($attr['orderby']) ? $attr['orderby'] : 'DESC'));
+    $orderby = strtoupper(str_replace(' ', '', $attr['orderby'] ?? 'DESC'));
     if (strpos(' ASC DESC ', $orderby) === false) {
         $orderby = 'DESC';
     }
     //--- $listurl
-    $listurl = str_replace(' ', '', isset($attr['listurl']) ? $attr['listurl'] : '');
-    $u_lst = explode(',', $listurl);
+    $listurl = str_replace(' ', '', $attr['listurl'] ?? '');
+    $u_lst   = explode(',', $listurl);
     //--- $blogid
-    $tmp = str_replace(' ', '', $blogid);
+    $tmp    = str_replace(' ', '', $blogid);
     $filter = '';
     $blogOK = '';
     $blogKO = '';
     if (!empty($tmp)) {
-        $blogs = explode(',', $tmp);
+        $blogs   = explode(',', $tmp);
         $nbblogs = count($blogs);
         for ($i = 0 ; $i < $nbblogs ; $i++) {
             $blog = $blogs[$i];
@@ -223,7 +235,7 @@ function NextDoor($attr)
     }
     //--- $maxitems
     $maxitems = str_replace(' ', '', $maxitems);
-    $tmp = strpos($maxitems, '-');
+    $tmp      = strpos($maxitems, '-');
     if ($tmp === false) {
         if (empty($maxitems)) {
             $sizlist = -1;
@@ -259,9 +271,9 @@ function NextDoor($attr)
     //--- SQL : filtre sur catégories
     $catOK = '';
     $catKO = '';
-    $tmp = str_replace(' ', '', $category);
+    $tmp   = str_replace(' ', '', $category);
     if (!empty($tmp)) {
-        $cats = explode(',', $tmp);
+        $cats   = explode(',', $tmp);
         $nbcats = count($cats);
         for ($i = 0 ; $i < $nbcats ; $i++) {
             $cat = $cats[$i];
@@ -316,7 +328,7 @@ function NextDoor($attr)
     }
     //--- SQL : filtre sur mot-clé
     if (!empty($metatag)) {
-        $query .= ' LEFT JOIN ' . DC_DBPREFIX . 'meta AS M ON M.post_id = P.post_id AND M.meta_type = \'tag\' ';
+        $query  .= ' LEFT JOIN ' . DC_DBPREFIX . 'meta AS M ON M.post_id = P.post_id AND M.meta_type = \'tag\' ';
         $filter .= ' AND M.meta_id = \'' . $metatag . '\'';
     }
     //--- SQL : fin de la requête
@@ -340,7 +352,7 @@ function NextDoor($attr)
     //--- SQL : exécution de la requête (recherche des billets)
     if ($mode == 'externe') {
         $res_post = dcCore::app()->con->select($query);
-        $modifurl = isset($attr['modifurl']) ? (bool)$attr['modifurl'] : (bool)false;
+        $modifurl = isset($attr['modifurl']) ? (bool) $attr['modifurl'] : (bool) false;
     } else {
         $res_post = dcCore::app()->con->select($query);
         $modifurl = (dcCore::app()->plugins->moduleExists('myUrlHandlers')) && (!isset(dcCore::app()->plugins->getDisabledModules['myUrlHandlers']));
@@ -375,38 +387,41 @@ function NextDoor($attr)
                     $cat_prefix = 'category';
                 }
                 //---
-                $blog_id = $res_post->f('blog_id');
-                $blog_url = htmlentities($res_post->f('blog_url'), ENT_QUOTES, 'UTF-8');
-                $post_id = $res_post->f('post_id');
+                $blog_id   = $res_post->f('blog_id');
+                $blog_url  = htmlentities($res_post->f('blog_url'), ENT_QUOTES, 'UTF-8');
+                $post_id   = $res_post->f('post_id');
                 $post_lang = $res_post->f('post_lang');
-                $user_id = $res_post->f('user_id');
-                $post_url = $blog_url . $post_prefix . '/' . htmlentities($res_post->f('post_url'), ENT_QUOTES, 'UTF-8');
-                $tmp = parse_url($blog_url);
-                $image_url = $tmp['scheme'] . '://'. $tmp['host'];
+                $user_id   = $res_post->f('user_id');
+                $post_url  = $blog_url . $post_prefix . '/' . htmlentities($res_post->f('post_url'), ENT_QUOTES, 'UTF-8');
+                $tmp       = parse_url($blog_url);
+                $image_url = $tmp['scheme'] . '://' . $tmp['host'];
                 $blog_name = htmlentities($res_post->f('blog_name'), ENT_QUOTES, 'UTF-8');
                 setlocale(LC_ALL, $locale);
-                $post_date = @strftime(htmlentities($formdate, ENT_QUOTES, 'UTF-8'), strtotime($res_post->f('post_dt')));
+                $post_date  = @strftime(htmlentities($formdate, ENT_QUOTES, 'UTF-8'), strtotime($res_post->f('post_dt')));
                 $post_title = $res_post->f('post_title');
                 $info_title = ' title="' . htmlentities($post_title, ENT_QUOTES, 'UTF-8') . '"';
                 if ($res_post->f('cat_id') <> null) {
                     $cat_title = $res_post->f('cat_title');
-                    $cat_url = $blog_url . $cat_prefix . '/' . $res_post->f('cat_url');
-                    $cat_id = $res_post->f('cat_id');
-                    $cat_css = ' cat' . $cat_id;
+                    $cat_url   = $blog_url . $cat_prefix . '/' . $res_post->f('cat_url');
+                    $cat_id    = $res_post->f('cat_id');
+                    $cat_css   = ' cat' . $cat_id;
                 } else {
                     $cat_title = '';
-                    $cat_url = '';
-                    $cat_id = '0';
-                    $cat_css = ' nocat';
+                    $cat_url   = '';
+                    $cat_id    = '0';
+                    $cat_css   = ' nocat';
                 }
                 $nb_comment = $res_post->f('nb_comment');
                 switch ($nb_comment) {
                     case '0': $txt_nbcomm = $nbcomm[0];
-                    break;
+
+                        break;
                     case '1': $txt_nbcomm = $nbcomm[1];
-                    break;
+
+                        break;
                     default: $txt_nbcomm = sprintf($nbcomm[2], $nb_comment);
-                    break;
+
+                        break;
                 }
                 $nb_trackback = $res_post->f('nb_trackback');
                 if ($res_post->f('post_password') <> null) {
@@ -414,9 +429,9 @@ function NextDoor($attr)
                 } else {
                     $class_pwd = '';
                 };
-                $excerpt = $res_post->f('post_excerpt_xhtml');
+                $excerpt               = $res_post->f('post_excerpt_xhtml');
                 dcCore::app()->content = $res_post->f('post_content_xhtml');
-                $tmp = $formitem;
+                $tmp                   = $formitem;
 
                 //--- remplacement des variables de formatage présentes dans $formitem par les données issues de $res_post->f(xxx)
                 if (strpos($formitem, '$blog_id') !== false) {
@@ -602,14 +617,18 @@ function NextDoor($attr)
                     $txt = '';
                     switch ($txt_src) {
                         case 'excerpt': $txt = $excerpt;
-                        break;
+
+                            break;
                         case 'content': $txt = dcCore::app()->content;
-                        break;
+
+                            break;
                         case 'full': $txt = $excerpt;
-                        $txt .= ' ' . dcCore::app()->content;
-                        break;
+                            $txt .= ' ' . dcCore::app()->content;
+
+                            break;
                         case 'first': (empty($excerpt) ? $txt = dcCore::app()->content : $txt = $excerpt);
-                        break;
+
+                            break;
                     }
                     $tmp = str_replace('%TEXT%', nxdo_trunc_text($txt, $txt_siz, $txt_cut), $tmp);
                 }
@@ -618,14 +637,18 @@ function NextDoor($attr)
                     $txt = '';
                     switch ($img_src) {
                         case 'excerpt': $txt = $excerpt;
-                        break;
+
+                            break;
                         case 'content': $txt = dcCore::app()->content;
-                        break;
+
+                            break;
                         case 'full': $txt = $excerpt;
-                        $txt .= dcCore::app()->content;
-                        break;
+                            $txt .= dcCore::app()->content;
+
+                            break;
                         case 'first': (empty($excerpt) ? $txt = dcCore::app()->content : $txt = $excerpt);
-                        break;
+
+                            break;
                     }
                     if ((preg_match_all('!<img(.*)/>!Ui', $txt, $res)) && ($img_deb > 0)) {
                         $j = $img_nbr;
@@ -642,15 +665,20 @@ function NextDoor($attr)
                             $i_nom = str_replace(['.', '_sq', '_t', '_s', '_m'], '', $i_old);
                             switch ($img_siz) {
                                 case 'sq': $i_new = '.' . $i_nom . '_sq';
-                                break;
+
+                                    break;
                                 case 't': $i_new = '.' . $i_nom . '_t';
-                                break;
+
+                                    break;
                                 case 's': $i_new = '.' . $i_nom . '_s';
-                                break;
+
+                                    break;
                                 case 'm': $i_new = '.' . $i_nom . '_m';
-                                break;
+
+                                    break;
                                 case 'o': $i_new = $i_nom;
-                                break;
+
+                                    break;
                             }
                             if (strpos($i_src, 'http') === false) {
                                 $i_one = $image_url . $i_src;
@@ -663,7 +691,8 @@ function NextDoor($attr)
                             $i_one = '<img class="nxdo-img" alt="' . $i_new . '" src="' . $i_one . '" />';
                             switch ($img_lnk) {
                                 case 'none': $i_all .= $i_one;
-                                break;
+
+                                    break;
                                 case 'entry':
                                     $i_all .= '<a class="nxdo-postlink" href="' . $post_url . '"';
                                     if ($img_tit <> '1') {
@@ -672,6 +701,7 @@ function NextDoor($attr)
                                         $i_all .= $info_title . '>';
                                     };
                                     $i_all .= $i_one . '</a>';
+
                                     break;
                             }
                         }
@@ -688,14 +718,17 @@ function NextDoor($attr)
                             $p .= '<li class="nxdo-item blog-' . $blog_id . $cat_css . $class_pwd . '">';
                             $p .= $tmp;
                             $p .= '</li>';
+
                             break;
                         case 'div':
                             $p .= '<div class="nxdo-item blog-' . $blog_id . $cat_css . $class_pwd . '">';
                             $p .= $tmp;
                             $p .= '</div>';
+
                             break;
                         case '':
                             $p .= $tmp;
+
                             break;
                     }
                 } else {
@@ -710,5 +743,6 @@ function NextDoor($attr)
             }
         };
     }
+
     return $p;
 }

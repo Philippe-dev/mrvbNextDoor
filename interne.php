@@ -15,7 +15,6 @@
  * Pour toute information concernant le paramétrage et l'usage de la fonction NextDoor(),
  * veuillez consulter le fichier lisezmoi.txt.
  */
-
 function intNextDoor($attr)
 {
     include_once 'common.php';

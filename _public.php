@@ -9,7 +9,6 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
-
 if (!defined('DC_RC_PATH')) {
     return;
 }
@@ -24,8 +23,7 @@ class mrvbNextDoorPublic
         if ($w->offline) {
             return;
         }
-        if (($w->homeonly == 1 && dcCore::app()->url->type != 'default') ||
-            ($w->homeonly == 2 && dcCore::app()->url->type == 'default')) {
+        if (($w->homeonly == 1 && dcCore::app()->url->type != 'default') || ($w->homeonly == 2 && dcCore::app()->url->type == 'default')) {
             return;
         }
 
@@ -34,32 +32,33 @@ class mrvbNextDoorPublic
             $res .= '<div class="nxdo-first">' . $w->intro . '</div>';
         }
         $attr = [
-            'mode' => 'widget',
-            'blogid' => $w->blogid,
-            'category' => $w->category,
-            'metatag' => $w->metatag,
-            'selected' => $w->selected,
-            'password' => $w->password,
-            'listurl' => $w->listurl,
-            'maxitems' => $w->maxitems,
-            'orderby' => $w->orderby,
-            'typepost' => $w->typepost,
-            'typlist' => $w->typlist,
-            'formdate' => $w->formdate,
-            'setlocal' => $w->setlocal,
-            'settext' => $w->settext,
-            'setimage' => $w->setimage,
+            'mode'      => 'widget',
+            'blogid'    => $w->blogid,
+            'category'  => $w->category,
+            'metatag'   => $w->metatag,
+            'selected'  => $w->selected,
+            'password'  => $w->password,
+            'listurl'   => $w->listurl,
+            'maxitems'  => $w->maxitems,
+            'orderby'   => $w->orderby,
+            'typepost'  => $w->typepost,
+            'typlist'   => $w->typlist,
+            'formdate'  => $w->formdate,
+            'setlocal'  => $w->setlocal,
+            'settext'   => $w->settext,
+            'setimage'  => $w->setimage,
             'setnbcomm' => $w->setnbcomm,
-            'formitem' => $w->formitem,
-            'titlemax' => $w->titlemax,
-            'titlecut' => $w->titlecut,
+            'formitem'  => $w->formitem,
+            'titlemax'  => $w->titlemax,
+            'titlecut'  => $w->titlecut,
             'noexcerpt' => $w->noexcerpt,
-            'readmore' => $w->readmore
+            'readmore'  => $w->readmore,
         ];
         $res .= NextDoor($attr);
         if (strlen($w->conclu) > 0) {
             $res .= '<div class="nxdo-last">' . $w->conclu . '</div>';
         }
+
         return $w->renderDiv($w->content_only, 'mrvbNextDoor ' . $w->CSSclass, '', $res);
     }
 }
