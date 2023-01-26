@@ -367,7 +367,7 @@ function NextDoor($attr)
         while ($res_post->fetch()) {
             $rng = $rng + 1;
             if ($rng > $deblist) {
-                $url_handlers = @unserialize($res_post->f('url_handlers'));
+                $url_handlers = unserialize((string) $res_post->f('url_handlers'));
                 //--- type/url : "post/post", "page/pages", "related/static" (etc...)
                 $j = 0;
                 for ($i = 0 ; $i < count($p_typ) ; $i++) {
