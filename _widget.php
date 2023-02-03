@@ -13,13 +13,13 @@ if (!defined('DC_RC_PATH')) {
     return;
 }
 
-dcCore::app()->addBehavior('initWidgets', ['mrvbNextDoorBehaviors', 'initWidgets']);
+dcCore::app()->addBehavior('initWidgets', [mrvbNextDoorBehaviors::class, 'initWidgets']);
 
 require_once dirname(__FILE__) . '/_init.php';
 
 class mrvbNextDoorBehaviors
 {
-    public static function initWidgets(dcWidgets $widgets): void
+    public static function initWidgets($widgets)
     {
         $widgets
         ->create('mrvbNextDoor', __('Mrvb: other blog'), ['mrvbNextDoorPublic', 'mrvbNextDoor'], null, __('posts from other blog of the same multiblog'))
