@@ -23,8 +23,8 @@ class mrvbNextDoorPublic
         if ($w->offline) {
             return;
         }
-        if (($w->homeonly == 1 && dcCore::app()->url->type != 'default') || ($w->homeonly == 2 && dcCore::app()->url->type == 'default')) {
-            return;
+        if (!$w->checkHomeOnly(dcCore::app()->url->type)) {
+            return '';
         }
 
         $res = ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '');
