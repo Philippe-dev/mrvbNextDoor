@@ -9,6 +9,9 @@
  *
  * @copyright GPL-2.0 [https://www.gnu.org/licenses/gpl-2.0.html]
  */
+
+use Dotclear\Helper\Html\Html;
+
 if (!defined('DC_RC_PATH')) {
     return;
 }
@@ -27,7 +30,7 @@ class mrvbNextDoorPublic
             return '';
         }
 
-        $res = ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '');
+        $res = ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '');
         if (strlen($w->intro) > 0) {
             $res .= '<div class="nxdo-first">' . $w->intro . '</div>';
         }
