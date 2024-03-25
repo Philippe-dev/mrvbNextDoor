@@ -17,9 +17,9 @@ $this->registerModule(
     'mrvbNextDoor',
     'Display posts from other blog of the same multiblog',
     'Mirovinben',
-    '1.9.3',
+    '1.9.4',
     [
-        'requires'    => [['core', '2.24']],
+        'requires'    => [['core', '2.30']],
         'permissions' => dcCore::app()->auth->makePermissions([dcAuth::PERMISSION_CONTENT_ADMIN]),
         'type'        => 'plugin',
         'support'     => 'https://www.mirovinben.fr/blog/index.php?post/id2656',
